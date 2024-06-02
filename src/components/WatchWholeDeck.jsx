@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export function WatchWholeDeck({ setStep, deck, customSelectedCards, setCustomSelectedCards, playCustomGame }) {
     const minimumCardsToPlay = 3;
     const handleClick = (card) => {
@@ -41,4 +43,12 @@ export function WatchWholeDeck({ setStep, deck, customSelectedCards, setCustomSe
             })}
         </div>
     )
+}
+
+WatchWholeDeck.propTypes = {
+    setStep: PropTypes.func,
+    deck: PropTypes.array,
+    customSelectedCards: PropTypes.array,
+    setCustomSelectedCards: PropTypes.func,
+    playCustomGame: PropTypes.func
 }

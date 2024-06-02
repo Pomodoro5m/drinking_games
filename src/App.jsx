@@ -45,7 +45,7 @@ function App() {
     return () => {
       window.removeEventListener("keypress", keyDownHandler);
     };
-  }, [])
+  })
 
   const resetAndGoHome = (resetDeck = false) => {
     resetDeck && setCurrentDeck([]);
