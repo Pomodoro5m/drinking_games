@@ -91,7 +91,7 @@ function App() {
   const deckConfigComponent = () => {
     return (
       <div className="DECK_CONFIG flex flex-col place-content-center place-items-center">
-        <img src={currentDeck[0]} className="w-1/6 my-4" />
+        <img src={currentDeck[0]} className="w-1/2 md:w-1/5 my-4" />
         <select
           onChange={(event) => {
             Number(event?.target?.value ?? '1') === DeckType.COUPLE ? setCurrentDeck(coupleDeck) : setCurrentDeck(iveNeverDeck)
@@ -114,11 +114,16 @@ function App() {
           />
           <span className="text-lg text-center">{numberOfCardsToPlay}</span>
         </div>
-        <div className="flex flex-row my-5">
-          <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn mx-3 btn-info">FAQ 🗯️</button>
-          <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn mx-3 btn-primary">Custom Game ♣️</button>
-          <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn mx-3 btn-warning">Reset Default 🔃</button>
-          <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn mx-3 btn-success">Play ▶️</button>
+        <div className="flex flex-col place-items-center place-content-center my-5">
+          <div className="m-2 flex flex-row place-content-center place-items-center">
+            <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-lg max-w-md btn mx-3 btn-primary">Custom Game ♣️</button>
+            <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-lg max-w-md btn mx-3 btn-success">Play ▶️</button>
+          </div>
+          <div className="m-2 flex flex-row place-content-center place-items-center">
+            <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-lg max-w-md btn mx-3 btn-info">FAQ 🗯️</button>
+            <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-lg max-w-md btn mx-3 btn-warning">Reset Default 🔃</button>
+
+          </div>
         </div>
       </div>
     )
@@ -127,7 +132,7 @@ function App() {
   const playingComponent = () => {
     return (
       <div className="flex place-content-center place-items-center w-full h-auto flex-wrap flex-col">
-        <div className="z-10 rounded-3xl sticky navbar top-0 p-4 justify-evenly bg-base-100">
+        <div className="z-10 rounded-3xl sticky flex-wrap md:flex-nowrap navbar top-0 p-4 justify-evenly bg-base-100">
           <a onClick={() => { setStep(steps.CONFIG); resetAndGoHome() }} className="btn btn-ghost text-xl">Home 🏚️</a>
           <div className="flex flex-row">
             <a onClick={() => { watchDeck() }} className="mr-4 btn btn-info text-xl">Start Timer ⏳</a>
@@ -159,8 +164,18 @@ function App() {
     return (
       <dialog id="faq_modal" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click outside to close</p>
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <p className="py-4">Custom Game ♣️ - selecione as cartas que deseja jogar do deck selecionado!</p>
+          <p className="py-4">Reset Default 🔃 - Volta as configurações ao normal, mantendo o deck selecionado!</p>
+          <p className="py-4">Por que os botões estão desabilitado? - Você deve selecionar o deck e no mínimo 1 carta para poder habilitar o jogo!</p>
+          <p className="py-4">Dúvidas ou sugestões, mandar no instagran <a href="https://www.instagram.com/matheusjimenez/" target="_blank">@Matheusjimenez</a></p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
@@ -170,7 +185,7 @@ function App() {
   }
 
   return (
-    <div className='p-10 h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
+    <div className='overflow-x-hidden p-10 h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
       {
         step === steps.CONFIG && deckConfigComponent()
       }

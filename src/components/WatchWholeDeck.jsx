@@ -1,5 +1,5 @@
 export function WatchWholeDeck({ setStep, deck, customSelectedCards, setCustomSelectedCards, playCustomGame }) {
-
+    const minimumCardsToPlay = 3;
     const handleClick = (card) => {
         if (customSelectedCards.includes(card)) {
             setCustomSelectedCards(customSelectedCards.filter(selectedCard => selectedCard !== card));
@@ -17,17 +17,24 @@ export function WatchWholeDeck({ setStep, deck, customSelectedCards, setCustomSe
         )
     }
     return (
-        <div className="flex flex-wrap flex-row place-content-center place-items-center">
-            <div className="z-10 rounded-3xl sticky navbar top-0 p-4 justify-evenly bg-base-100">
+        <div className="flex flex-wrap flex-row place-content-center place-items-center w-full">
+            <div className="z-10 md:flex-nowrap flex-wrap rounded-3xl sticky navbar top-0 p-4 justify-evenly bg-base-100">
                 <a onClick={() => { setStep('config') }} className="btn btn-ghost text-xl">Home 🏚️</a>
-                <button disabled={customSelectedCards.length === 0} onClick={() => { playCustomGame() }} className="btn btn-success text-xl">Play Custom Game ▶️</button>
+                <div>
+                    <div className="m-2">
+                        <p>Você selecionou {customSelectedCards.length} cartas</p>
+                        {customSelectedCards.length - minimumCardsToPlay < 0 && <p className="text-orange-300">Selecione mais {minimumCardsToPlay - customSelectedCards.length} para jogar</p>}
+                    </div>
+                    <button onClick={() => { setCustomSelectedCards([]) }} className=" mx-2 btn btn-xs btn-ghost">🗑️</button>
+                </div>
+                <button disabled={customSelectedCards.length < minimumCardsToPlay} onClick={() => { playCustomGame() }} className="btn btn-success text-xl">Play Custom Game ▶️</button>
             </div>
             {deck.map((card, index) => {
                 return (
                     <img
                         onClick={() => handleClick(card)}
                         key={index}
-                        className={`m-1 cursor-pointer w-1/5 z-0 ${customSelectedCards.includes(card) ? 'opacity-50 rounded-2xl border-4 border-success' : 'opacity-100'}`}
+                        className={`m-1 cursor-pointer w-32 md:w-1/5 z-0 ${customSelectedCards.includes(card) ? 'opacity-50 rounded-2xl border-4 border-success bg-opacity-50 bg-success' : 'opacity-100'}`}
                         src={card}
                     />
                 )
