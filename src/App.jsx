@@ -2,6 +2,7 @@ import { useState } from "react";
 import { coupleDeck } from './utils/importCoupleDeck';
 import { iveNeverDeck } from './utils/importIveNeverDeck.js';
 import { WatchWholeDeck } from './components/WatchWholeDeck';
+import { useEffect } from "react";
 
 
 const DeckType = {
@@ -23,9 +24,28 @@ function App() {
   const [cardIndex, setCardIndex] = useState(0);
   const [flip, setFlip] = useState(false);
   const [customSelectedCards, setCustomSelectedCards] = useState([]);
-  const [timer, setTimer] = useState("15");
+  // const [timer, setTimer] = useState("15");
 
   const [step, setStep] = useState('config');
+
+  useEffect(() => {
+    const keyDownHandler = ({ key }) => {
+      if (key === 'Enter' && step === steps.PLAYING) {
+        return setFlip(!flip);
+      }
+      if (key === 'ArrowRight' && step === steps.PLAYING) {
+        return goNextCard();
+      }
+      if (key === 'ArrowLeft' && step === steps.PLAYING) {
+        return goPreviousCard();
+      }
+    }
+    window.addEventListener("keypress", keyDownHandler);
+
+    return () => {
+      window.removeEventListener("keypress", keyDownHandler);
+    };
+  }, [])
 
   const resetAndGoHome = (resetDeck = false) => {
     resetDeck && setCurrentDeck([]);
@@ -34,7 +54,7 @@ function App() {
     setCardIndex(0);
     setFlip(false);
     setCustomSelectedCards([]);
-    setTimer("15");
+    // setTimer("15");
   }
 
   const goNextCard = () => {
@@ -122,7 +142,6 @@ function App() {
           <div className="m-2 flex flex-row place-content-center place-items-center">
             <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-lg max-w-md btn mx-3 btn-info">FAQ 🗯️</button>
             <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-lg max-w-md btn mx-3 btn-warning">Reset Default 🔃</button>
-
           </div>
         </div>
       </div>
@@ -134,17 +153,18 @@ function App() {
       <div className="flex place-content-center place-items-center w-full h-auto flex-wrap flex-col">
         <div className="z-10 rounded-3xl sticky flex-wrap md:flex-nowrap navbar top-0 p-4 justify-evenly bg-base-100">
           <a onClick={() => { setStep(steps.CONFIG); resetAndGoHome() }} className="btn btn-ghost text-xl">Home 🏚️</a>
-          <div className="flex flex-row">
+          {/* <div className="flex flex-row">
             <a onClick={() => { watchDeck() }} className="mr-4 btn btn-info text-xl">Start Timer ⏳</a>
             <input className="input input-bordered input-info w-20" value={timer} onChange={(event) => { setTimer(event.target.value) }} placeholder="15" type="number" />
+          </div> */}
+        </div>
+        <div className="flex flex-row place-content-center place-items-center">
+          Cards remaining: {playingDeck.length - cardIndex - 1}
+          <div className={`p-2 m-2 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
+            <p>Turno {cardIndex % 2 === 0 ? 'roxo' : 'amarelo'}</p>
           </div>
         </div>
-        <div>
-          Cards remaining: {playingDeck.length - cardIndex - 1}
-        </div>
-        <div className={`p-2 m-2 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
-          <p>Player {cardIndex % 2 === 0 ? '1' : '2'}</p>
-        </div>
+
         <div className="w-full h-auto flex place-items-center place-content-center">
           {
             flip ?
@@ -171,6 +191,7 @@ function App() {
           <p className="py-4">Reset Default 🔃 - Volta as configurações ao normal, mantendo o deck selecionado!</p>
           <p className="py-4">Por que os botões estão desabilitado? - Você deve selecionar o deck e no mínimo 1 carta para poder habilitar o jogo!</p>
           <p className="py-4">Dúvidas ou sugestões, mandar no instagran <a href="https://www.instagram.com/matheusjimenez/" target="_blank">@Matheusjimenez</a></p>
+          <p className="py-4">Atalhos: Enter para virar a carta / setas {"<-- e -->"} para navegar</p>
           <div className="modal-action">
             <form method="dialog">
               <button className="btn">Close</button>
