@@ -28,20 +28,22 @@ function App() {
 
   useEffect(() => {
     const keyDownHandler = ({ key }) => {
-      if (key === 'Enter' && step === steps.PLAYING) {
+      console.log('key', key);
+      console.log('step', step);
+      if ((key === 'Enter') && step === steps.PLAYING) {
         return setFlip(!flip);
       }
-      if (key === 'ArrowRight' && step === steps.PLAYING) {
+      if ((key === 'ArrowRight') && step === steps.PLAYING) {
         return goNextCard();
       }
-      if (key === 'ArrowLeft' && step === steps.PLAYING) {
+      if ((key === 'ArrowLeft') && step === steps.PLAYING) {
         return goPreviousCard();
       }
     }
-    window.addEventListener("keypress", keyDownHandler);
+    window.addEventListener("keydown", keyDownHandler);
 
     return () => {
-      window.removeEventListener("keypress", keyDownHandler);
+      window.removeEventListener("keydown", keyDownHandler);
     };
   })
 
@@ -104,7 +106,7 @@ function App() {
   const deckConfigComponent = () => {
     return (
       <div className="DECK_CONFIG flex flex-col place-content-center place-items-center">
-        <img src={currentDeck[0]} className="w-1/2 md:w-1/5 my-4" />
+        <img src={currentDeck[0]} className="w-1/3 md:w-1/5 my-4" />
         <select
           onChange={(event) => {
             Number(event?.target?.value ?? '1') === DeckType.COUPLE ? setCurrentDeck(coupleDeck) : setCurrentDeck(iveNeverDeck)
@@ -140,11 +142,10 @@ function App() {
       </div>
     )
   }
-
   const playingComponent = () => {
     return (
-      <div className="flex place-content-center place-items-center w-full h-auto flex-wrap flex-col">
-        <div className="z-10 rounded-3xl sticky flex-wrap md:flex-nowrap navbar top-0 p-4 justify-evenly bg-base-100">
+      <div className="flex w-full h-auto justify-start self-start items-center flex-col">
+        <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100">
           <a onClick={() => { setStep(steps.CONFIG); resetAndGoHome() }} className="btn btn-ghost text-xl">Home 🏚️</a>
           {/* <div className="flex flex-row">
             <a onClick={() => { watchDeck() }} className="mr-4 btn btn-info text-xl">Start Timer ⏳</a>
@@ -152,23 +153,37 @@ function App() {
           </div> */}
         </div>
         <div className="flex flex-row place-content-center place-items-center">
-          Cards remaining: {playingDeck.length - cardIndex - 1}
-          <div className={`p-2 m-2 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
+          Cartas restantes: {playingDeck.length - cardIndex - 1}
+          <div className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
             <p>Turno {cardIndex % 2 === 0 ? 'roxo' : 'amarelo'}</p>
           </div>
         </div>
 
-        <div className="w-full h-auto flex place-items-center place-content-center">
+        <div className="w-8/12 h-auto flex place-items-center place-content-center">
           {
             flip ?
               <img onClick={() => { setFlip(false) }} className="cursor-pointer md:h-96 h-1/2" src={playingDeck[cardIndex]} /> :
               <img onClick={() => { setFlip(true) }} className="cursor-pointer md:h-96 h-1/2" src={currentDeck[0]} />
           }
         </div>
-        <div className="flex justify-evenly md:w-1/6 my-4">
-          <button onClick={() => goPreviousCard()} className="btn mx-1 md:btn-lg btn-sm btn-danger">{"<"} Previous</button>
-          <button onClick={() => goNextCard()} className="btn mx-1 md:btn-lg btn-sm btn-success">Next {">"}</button>
+        <div className="btm-nav">
+          <button onClick={() => goPreviousCard()} className="bg-gray-200 text-gray-600 text-2xl font-bold">
+            {"<"}
+            <span className="btm-nav-label text-lg font-bold">Anterior</span>
+          </button>
+          <button onClick={() => setFlip(!flip)} className="bg-gray-600 text-black text-2xl font-bold">
+            🔃
+            <span className="btm-nav-label text-lg">Virar Carta</span>
+          </button>
+          <button onClick={() => goNextCard()} className="bg-green-300 text-green-700 text-2xl font-bold">
+            {">"}
+            <span className="btm-nav-label text-lg font-bold">Próxima</span>
+          </button>
         </div>
+        {/* <div className="flex justify-evenly md:w-1/6 my-4">
+          <button onClick={() => goPreviousCard()} className="btn mx-1 md:btn-lg btn-sm btn-danger">{"<"} Anterior</button>
+          <button onClick={() => goNextCard()} className="btn mx-1 md:btn-lg btn-sm btn-success">Próxima {">"}</button>
+        </div> */}
       </div>
     );
   }
@@ -199,7 +214,7 @@ function App() {
   }
 
   return (
-    <div className='overflow-x-hidden p-10 h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
+    <div className='overflow-x-hidden h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
       {
         step === steps.CONFIG && deckConfigComponent()
       }
