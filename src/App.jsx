@@ -4,7 +4,6 @@ import { iveNeverDeck } from './utils/importIveNeverDeck.js';
 import { WatchWholeDeck } from './components/WatchWholeDeck';
 import { useEffect } from "react";
 
-
 const DeckType = {
   COUPLE: 1,
   IVENEVER: 2
@@ -14,7 +13,6 @@ const steps = {
   CONFIG: 'config',
   PLAYING: 'playing',
   WATCH: 'watch'
-
 }
 
 function App() {
@@ -93,14 +91,9 @@ function App() {
     let newDeck = [];
     let currentIndex = deck.length;
 
-    // While there remain elements to shuffle...
     while (currentIndex != 0) {
-
-      // Pick a remaining element...
       let randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
-
-      // And swap it with the current element.
       [deck[currentIndex], deck[randomIndex]] = [
         deck[randomIndex], deck[currentIndex]];
     }
