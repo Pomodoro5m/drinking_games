@@ -23,8 +23,6 @@ function App() {
 
   useEffect(() => {
     const keyDownHandler = ({ key }) => {
-      console.log('key', key);
-      console.log('step', step);
       if ((key === 'Enter') && step === steps.PLAYING) {
         return setFlip(!flip);
       }
@@ -123,12 +121,12 @@ function App() {
           />
           <span className="text-lg text-center">{numberOfCardsToPlay}</span>
         </div>
-        <div className="flex flex-col place-items-center place-content-center my-5">
-          <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-lg my-2 w-full btn mx-3 btn-success">Iniciar▶️</button>
-          <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-lg my-2 w-full btn mx-3 btn-primary">Monte seu Jogo ♣️</button>
-          <div className="m-2 flex flex-row place-content-center place-items-center">
-            <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-lg max-w-md btn mx-3 btn-info">Dúvidas 🗯️</button>
-            <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-lg max-w-md btn mx-3 btn-warning">Resetar 🔃</button>
+        <div className="flex w-10/12 flex-col place-items-center place-content-center my-5">
+          <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-lg my-2 w-full btn btn-success">Iniciar▶️</button>
+          <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-lg my-2 w-full btn btn-primary">Monte seu Jogo ♣️</button>
+          <div className="m-2 flex flex-row place-content-center place-items-center w-full">
+            <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-md mx-2 btn btn-info">Dúvidas 🗯️</button>
+            <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-md mx-2 btn btn-warning">Resetar 🔃</button>
           </div>
         </div>
       </div>
@@ -159,7 +157,7 @@ function App() {
           }
         </div>
         <div className="btm-nav">
-          <button onClick={() => goPreviousCard()} className="bg-gray-200 text-gray-600 text-2xl font-bold">
+          <button onClick={() => goPreviousCard()} className="bg-warning text-black text-2xl font-bold">
             {"<"}
             <span className="btm-nav-label text-lg font-bold">Anterior</span>
           </button>
@@ -167,7 +165,7 @@ function App() {
             🔃
             <span className="btm-nav-label text-lg">Virar Carta</span>
           </button>
-          <button onClick={() => goNextCard()} className="bg-green-300 text-green-700 text-2xl font-bold">
+          <button onClick={() => goNextCard()} className="bg-green-500 text-black text-2xl font-bold">
             {">"}
             <span className="btm-nav-label text-lg font-bold">Próxima</span>
           </button>
