@@ -98,32 +98,42 @@ function App() {
 
   const deckConfigComponent = () => {
     return (
-      <div className="DECK_CONFIG flex flex-col place-content-center place-items-center">
+      <div className="flex flex-col align-middle items-center">
+        <span className="font-bold my-2">Selecione um baralho!</span>
         <div className="flex flex-row place-items-center place-content-center">
           <img
-            onClick={() => { setCurrentDeck(coupleDeck) }}
+            onClick={() => {
+              setCurrentDeck(coupleDeck)
+              if (numberOfCardsToPlay > coupleDeck.length) setNumberOfCardsToPlay(coupleDeck.length)
+            }}
             src={coupleDeck[0]}
             className={`${currentDeck === coupleDeck ? 'w-1/3' : 'w-1/4 opacity-65'} cursor-pointer mx-2 md:w-1/5 my-4`} />
           <img
-            onClick={() => { setCurrentDeck(iveNeverDeck) }}
+            onClick={() => {
+              setCurrentDeck(iveNeverDeck)
+              if (numberOfCardsToPlay > iveNeverDeck.length) setNumberOfCardsToPlay(iveNeverDeck.length)
+            }}
             src={iveNeverDeck[0]}
             className={`${currentDeck === iveNeverDeck ? 'w-1/3' : 'w-1/4 opacity-65'} cursor-pointer mx-2 md:w-1/5 my-4`} />
         </div>
-        <p className="mt-5 mb-2">Escolha o numero de cartas</p>
-        <div className="flex flex-row mb-5">
+        <p className="mt-1 mb-4">Escolha o numero de cartas</p>
+        <div className="flex flex-row mb-3">
           <input
-            className="range range-accent mx-4"
+            className="range range-accent"
             type="range"
             min={0}
             max={currentDeck.length}
             value={numberOfCardsToPlay}
             onChange={(e) => setNumberOfCardsToPlay(Number(e.target.value))}
           />
-          <span className="text-lg text-center">{numberOfCardsToPlay}</span>
         </div>
-        <div className="flex w-10/12 flex-col place-items-center place-content-center my-5">
-          <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-lg my-2 w-full btn btn-success">Iniciar▶️</button>
-          <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-lg my-2 w-full btn btn-primary">Monte seu Jogo ♣️</button>
+        <div>
+          <span className="font-bold text-center">{numberOfCardsToPlay}</span>
+          <span className="text-xs text-center">/{currentDeck.length}</span>
+        </div>
+        <div className="flex w-10/12 flex-col place-items-center place-content-center my-3">
+          <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-md mb-2 w-full btn btn-success">Iniciar▶️</button>
+          <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-md my-2 w-full btn btn-primary">Monte seu Jogo ♣️</button>
           <div className="m-2 flex flex-row place-content-center place-items-center w-full">
             <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-md mx-2 btn btn-info">Dúvidas 🗯️</button>
             <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-md mx-2 btn btn-warning">Resetar 🔃</button>
@@ -145,7 +155,7 @@ function App() {
         <div className="flex flex-row place-content-center place-items-center">
           Cartas restantes: {playingDeck.length - cardIndex - 1}
           <div className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
-            <p>Turno {cardIndex % 2 === 0 ? 'roxo' : 'amarelo'}</p>
+            <p>Jogador {cardIndex % 2 === 0 ? 'roxo' : 'amarelo'}</p>
           </div>
         </div>
 
@@ -170,10 +180,6 @@ function App() {
             <span className="btm-nav-label text-lg font-bold">Próxima</span>
           </button>
         </div>
-        {/* <div className="flex justify-evenly md:w-1/6 my-4">
-          <button onClick={() => goPreviousCard()} className="btn mx-1 md:btn-lg btn-sm btn-danger">{"<"} Anterior</button>
-          <button onClick={() => goNextCard()} className="btn mx-1 md:btn-lg btn-sm btn-success">Próxima {">"}</button>
-        </div> */}
       </div>
     );
   }
