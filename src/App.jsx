@@ -210,7 +210,7 @@ function App() {
   }
 
   return (
-    <div className='overflow-x-hidden h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
+    <div className='overflow-hidden h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
       {
         step === steps.CONFIG && deckConfigComponent()
       }
