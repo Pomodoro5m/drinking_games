@@ -4,11 +4,6 @@ import { iveNeverDeck } from './utils/importIveNeverDeck.js';
 import { WatchWholeDeck } from './components/WatchWholeDeck';
 import { useEffect } from "react";
 
-const DeckType = {
-  COUPLE: 1,
-  IVENEVER: 2
-}
-
 const steps = {
   CONFIG: 'config',
   PLAYING: 'playing',
@@ -18,7 +13,7 @@ const steps = {
 function App() {
   const [numberOfCardsToPlay, setNumberOfCardsToPlay] = useState(10);
   const [playingDeck, setPlayingDeck] = useState([]);
-  const [currentDeck, setCurrentDeck] = useState([]);
+  const [currentDeck, setCurrentDeck] = useState(coupleDeck);
   const [cardIndex, setCardIndex] = useState(0);
   const [flip, setFlip] = useState(false);
   const [customSelectedCards, setCustomSelectedCards] = useState([]);
@@ -106,17 +101,16 @@ function App() {
   const deckConfigComponent = () => {
     return (
       <div className="DECK_CONFIG flex flex-col place-content-center place-items-center">
-        <img src={currentDeck[0]} className="w-1/3 md:w-1/5 my-4" />
-        <select
-          onChange={(event) => {
-            Number(event?.target?.value ?? '1') === DeckType.COUPLE ? setCurrentDeck(coupleDeck) : setCurrentDeck(iveNeverDeck)
-          }}
-          defaultValue={currentDeck.length === 0 ? 0 : currentDeck === coupleDeck ? DeckType.COUPLE : DeckType.IVENEVER}
-          className="select select-bordered w-full max-w-xs">
-          <option value={0} disabled>Select Deck</option>
-          <option value={DeckType.COUPLE}>Esquenta Casal</option>
-          <option value={DeckType.IVENEVER} >Eu Nunca</option>
-        </select>
+        <div className="flex flex-row place-items-center place-content-center">
+          <img
+            onClick={() => { setCurrentDeck(coupleDeck) }}
+            src={coupleDeck[0]}
+            className={`${currentDeck === coupleDeck ? 'w-1/3' : 'w-1/4 opacity-65'} cursor-pointer mx-2 md:w-1/5 my-4`} />
+          <img
+            onClick={() => { setCurrentDeck(iveNeverDeck) }}
+            src={iveNeverDeck[0]}
+            className={`${currentDeck === iveNeverDeck ? 'w-1/3' : 'w-1/4 opacity-65'} cursor-pointer mx-2 md:w-1/5 my-4`} />
+        </div>
         <p className="mt-5 mb-2">Escolha o numero de cartas</p>
         <div className="flex flex-row mb-5">
           <input
@@ -130,13 +124,11 @@ function App() {
           <span className="text-lg text-center">{numberOfCardsToPlay}</span>
         </div>
         <div className="flex flex-col place-items-center place-content-center my-5">
+          <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-lg my-2 w-full btn mx-3 btn-success">Iniciar▶️</button>
+          <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-lg my-2 w-full btn mx-3 btn-primary">Monte seu Jogo ♣️</button>
           <div className="m-2 flex flex-row place-content-center place-items-center">
-            <button disabled={currentDeck.length === 0} onClick={() => watchDeck()} className="btn-lg max-w-md btn mx-3 btn-primary">Custom Game ♣️</button>
-            <button disabled={currentDeck.length === 0} onClick={() => startGame()} className="btn-lg max-w-md btn mx-3 btn-success">Play ▶️</button>
-          </div>
-          <div className="m-2 flex flex-row place-content-center place-items-center">
-            <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-lg max-w-md btn mx-3 btn-info">FAQ 🗯️</button>
-            <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-lg max-w-md btn mx-3 btn-warning">Reset Default 🔃</button>
+            <button onClick={() => document.getElementById('faq_modal')?.showModal()} className="btn-lg max-w-md btn mx-3 btn-info">Dúvidas 🗯️</button>
+            <button disabled={currentDeck.length === 0} onClick={() => resetAndGoHome()} className="btn-lg max-w-md btn mx-3 btn-warning">Resetar 🔃</button>
           </div>
         </div>
       </div>

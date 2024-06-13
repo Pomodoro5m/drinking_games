@@ -36,7 +36,7 @@ export function WatchWholeDeck({ setStep, deck, customSelectedCards, setCustomSe
                     <img
                         onClick={() => handleClick(card)}
                         key={index}
-                        className={`m-1 cursor-pointer w-32 md:w-1/5 z-0 ${customSelectedCards.includes(card) ? 'opacity-50 rounded-2xl border-4 border-success bg-opacity-50 bg-success' : 'opacity-100'}`}
+                        className={`m-1 cursor-pointer w-32 md:w-1/5 z-0 ${customSelectedCards.includes(card) ? 'rounded-2xl border-4 border-success bg-opacity-50 bg-success' : 'opacity-100'}`}
                         src={card}
                     />
                 )
