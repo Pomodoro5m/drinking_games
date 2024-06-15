@@ -3,6 +3,7 @@ import { coupleDeck } from './utils/importCoupleDeck';
 import { iveNeverDeck } from './utils/importIveNeverDeck.js';
 import { WatchWholeDeck } from './components/WatchWholeDeck';
 import { useEffect } from "react";
+import { SweetAlert } from './components/SweetAlert.jsx';
 
 const steps = {
   CONFIG: 'config',
@@ -17,7 +18,7 @@ function App() {
   const [cardIndex, setCardIndex] = useState(0);
   const [flip, setFlip] = useState(false);
   const [customSelectedCards, setCustomSelectedCards] = useState([]);
-  // const [timer, setTimer] = useState("15");
+  const [timer, setTimer] = useState(0);
 
   const [step, setStep] = useState('config');
 
@@ -26,7 +27,7 @@ function App() {
       if ((key === 'Enter') && step === steps.PLAYING) {
         return setFlip(!flip);
       }
-      if ((key === 'ArrowRight') && step === steps.PLAYING) {
+      if ((key === 'ArrowRight') & step === steps.PLAYING) {
         return goNextCard();
       }
       if ((key === 'ArrowLeft') && step === steps.PLAYING) {
@@ -144,27 +145,27 @@ function App() {
   }
   const playingComponent = () => {
     return (
-      <div className="flex w-full h-auto justify-start self-start items-center flex-col">
+      <div className="flex w-full h-full justify-start self-start items-center flex-col">
         <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100">
-          <a onClick={() => { setStep(steps.CONFIG); resetAndGoHome() }} className="btn btn-ghost text-xl">Home 🏚️</a>
-          {/* <div className="flex flex-row">
-            <a onClick={() => { watchDeck() }} className="mr-4 btn btn-info text-xl">Start Timer ⏳</a>
-            <input className="input input-bordered input-info w-20" value={timer} onChange={(event) => { setTimer(event.target.value) }} placeholder="15" type="number" />
-          </div> */}
+          <a onClick={() => { document.getElementById('leave_home_modal').showModal() }} className="btn btn-ghost text-sm">Home 🏚️</a>
+          <a onClick={() => { document.getElementById('dice_modal')?.showModal() }} className="btn btn-ghost text-sm">Dado 🎲</a>
+          <a onClick={() => { document.getElementById('timer_modal')?.showModal() }} className="btn btn-ghost text-sm">Timer⏳</a>
         </div>
-        <div className="flex flex-row place-content-center place-items-center">
-          Cartas restantes: {playingDeck.length - cardIndex - 1}
-          <div className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
-            <p>Jogador {cardIndex % 2 === 0 ? 'roxo' : 'amarelo'}</p>
+        <div className="flex flex-col items-center content-start h-full self-start">
+          <div className="flex flex-row place-content-center place-items-center">
+            Cartas restantes: {playingDeck.length - cardIndex - 1}
+            <div className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0 ? 'border-primary bg-primary' : 'bg-warning border-warning text-black'}`}>
+              <p>Jogador {cardIndex % 2 === 0 ? 'roxo' : 'amarelo'}</p>
+            </div>
           </div>
-        </div>
 
-        <div className="w-8/12 h-auto flex place-items-center place-content-center">
-          {
-            flip ?
-              <img onClick={() => { setFlip(false) }} className="cursor-pointer md:h-96 h-1/2" src={playingDeck[cardIndex]} /> :
-              <img onClick={() => { setFlip(true) }} className="cursor-pointer md:h-96 h-1/2" src={currentDeck[0]} />
-          }
+          <div className="w-10/12 h-auto flex place-items-center place-content-center">
+            {
+              flip ?
+                <img onClick={() => { setFlip(false) }} className="cursor-pointer md:h-96 h-10/12" src={playingDeck[cardIndex]} /> :
+                <img onClick={() => { setFlip(true) }} className="cursor-pointer md:h-96 h-10/12" src={currentDeck[0]} />
+            }
+          </div>
         </div>
         <div className="btm-nav">
           <button onClick={() => goPreviousCard()} className="bg-warning text-black text-2xl font-bold">
@@ -209,6 +210,105 @@ function App() {
     )
   }
 
+  const rollDice = () => {
+    const dice = [...document.querySelectorAll(".die-list")];
+    dice.forEach(die => {
+      toggleClasses(die);
+      die.dataset.roll = getRandomNumber(1, 6);
+      // die.dataset.roll = 1;
+    });
+  }
+
+  const toggleClasses = (die) => {
+    die.classList.toggle("odd-roll");
+    die.classList.toggle("even-roll");
+  }
+
+  const getRandomNumber = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  const handleHomeClick = () => {
+    setStep(steps.CONFIG);
+    resetAndGoHome();
+  }
+
+  const DiceModal = () => {
+    return (
+      <dialog id="dice_modal" className="modal">
+        <div className="modal-box">
+          <div onClick={() => { rollDice() }} className="dice">
+            <ol className="die-list even-roll" data-roll="1" id="die-1">
+              <li className="die-item" data-side="1">
+                <span className="dot"></span>
+              </li>
+              <li className="die-item" data-side="2">
+                <span className="dot"></span>
+                <span className="dot"></span>
+              </li>
+              <li className="die-item" data-side="3">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+              </li>
+              <li className="die-item" data-side="4">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+              </li>
+              <li className="die-item" data-side="5">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+              </li>
+              <li className="die-item" data-side="6">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+              </li>
+            </ol>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    )
+  }
+
+  const TimerModal = () => {
+    return (
+      <dialog id="timer_modal" className="modal">
+        <div className="modal-box">
+          <label className="input input-bordered flex items-center gap-2">
+            Tempo
+            <input type="text" value={timer} onChange={
+              (e) => {
+                setTimer(e.target.value)
+              }
+            } className="grow" placeholder="00m 00s" />
+          </label>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn mx-2">Fechar</button>
+              <div className="btn mx-2 btn-success">iniciar</div>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    );
+  }
+
   return (
     <div className='overflow-hidden h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center'>
       {
@@ -227,6 +327,13 @@ function App() {
         />
       }
       {FAQModal()}
+      {DiceModal()}
+      {TimerModal()}
+      <SweetAlert
+        text="Deseja realmente sair do jogo?"
+        confirmFunction={() => handleHomeClick()}
+        modalIdentifier='leave_home_modal'
+      />
     </div >
   )
 }
