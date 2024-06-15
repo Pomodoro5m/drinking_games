@@ -143,6 +143,7 @@ function App() {
       </div>
     )
   }
+
   const playingComponent = () => {
     return (
       <div className="flex w-full h-full justify-start self-start items-center flex-col">
