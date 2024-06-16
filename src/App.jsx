@@ -29,6 +29,7 @@ function App() {
   const [step, setStep] = useState("config");
   const [players, setPlayers] = useState(["Roxo", "Amarelo"]);
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
+  const [currentItem, setCurrentItem] = useState(0);
 
   useEffect(() => {
     let playersArray = new Array(currentDeck.length).fill("");
@@ -122,47 +123,95 @@ function App() {
     return (
       <div className="flex flex-col align-middle items-center">
         <span className="font-bold my-2">Selecione um baralho!</span>
-        <div className="flex flex-row w-screen overflow-x-auto place-items-center place-content-center">
-          <img
-            onClick={() => {
-              setCurrentDeck(coupleDeck);
-              if (numberOfCardsToPlay > coupleDeck.length)
-                setNumberOfCardsToPlay(coupleDeck.length);
-            }}
-            src={coupleDeck[0]}
-            className={`${currentDeck === coupleDeck ? "w-1/3" : "w-1/4 opacity-65"
-              } cursor-pointer mx-2 md:w-1/5 my-4`}
-          />
-          <img
-            onClick={() => {
-              setCurrentDeck(iveNeverDeck);
-              if (numberOfCardsToPlay > iveNeverDeck.length)
-                setNumberOfCardsToPlay(iveNeverDeck.length);
-            }}
-            src={iveNeverDeck[0]}
-            className={`${currentDeck === iveNeverDeck ? "w-1/3" : "w-1/4 opacity-65"
-              } cursor-pointer mx-2 md:w-1/5 my-4`}
-          />
-          <img
-            onClick={() => {
-              setCurrentDeck(truthOrChallengeDeck);
-              if (numberOfCardsToPlay > truthOrChallengeDeck.length)
-                setNumberOfCardsToPlay(truthOrChallengeDeck.length);
-            }}
-            src={truthOrChallengeDeck[0]}
-            className={`${currentDeck === truthOrChallengeDeck ? "w-1/3" : "w-1/4 opacity-65"
-              } cursor-pointer mx-2 md:w-1/5 my-4`}
-          />
-          <img
-            onClick={() => {
-              setCurrentDeck(findOutDeck);
-              if (numberOfCardsToPlay > findOutDeck.length)
-                setNumberOfCardsToPlay(findOutDeck.length);
-            }}
-            src={findOutDeck[0]}
-            className={`${currentDeck === findOutDeck ? "w-1/3" : "w-1/4 opacity-65"
-              } cursor-pointer mx-2 md:w-1/5 my-4`}
-          />
+        <div className="container">
+          <button
+            onClick={(e) => {
+              const items = document.querySelectorAll(".item");
+              let maxItems = document.querySelectorAll(".item")?.length;
+
+              setCurrentItem(currentItem - 1);
+
+              if (currentItem >= maxItems) {
+                setCurrentItem(0);
+              }
+
+              if (currentItem < 0) {
+                setCurrentItem(maxItems - 1);
+              }
+
+              items.forEach((item) => item.classList.remove("current-item"));
+
+              items[currentItem].scrollIntoView({
+                behavior: "smooth",
+                inline: "center"
+              });
+
+              items[currentItem].classList.add("current-item");
+            }} className="arrow-left control" aria-label="Previous image">◀</button>
+          <button
+            onClick={(e) => {
+              const items = document.querySelectorAll(".item");
+              let maxItems = document.querySelectorAll(".item")?.length;
+
+              setCurrentItem(currentItem + 1);
+
+              if (currentItem >= maxItems) {
+                setCurrentItem(0);
+              }
+
+              if (currentItem < 0) {
+                setCurrentItem(maxItems - 1);
+              }
+
+              items.forEach((item) => item.classList.remove("current-item"));
+
+              items[currentItem].scrollIntoView({
+                behavior: "smooth",
+                inline: "center"
+              });
+
+              items[currentItem].classList.add("current-item");
+            }} className="arrow-right control" aria-label="Next Image">▶</button>
+          <div className="gallery-wrapper">
+            <div className="gallery">
+              <img
+                onClick={() => {
+                  setCurrentDeck(coupleDeck);
+                  if (numberOfCardsToPlay > coupleDeck.length)
+                    setNumberOfCardsToPlay(coupleDeck.length);
+                }}
+                src={coupleDeck[0]}
+                className={`item ${currentDeck === coupleDeck ? "current-item" : ""}`}
+              />
+              <img
+                onClick={() => {
+                  setCurrentDeck(iveNeverDeck);
+                  if (numberOfCardsToPlay > iveNeverDeck.length)
+                    setNumberOfCardsToPlay(iveNeverDeck.length);
+                }}
+                src={iveNeverDeck[0]}
+                className={`item ${currentDeck === iveNeverDeck ? "current-item" : ""}`}
+              />
+              <img
+                onClick={() => {
+                  setCurrentDeck(truthOrChallengeDeck);
+                  if (numberOfCardsToPlay > truthOrChallengeDeck.length)
+                    setNumberOfCardsToPlay(truthOrChallengeDeck.length);
+                }}
+                src={truthOrChallengeDeck[0]}
+                className={`item ${currentDeck === truthOrChallengeDeck ? "current-item" : ""}`}
+              />
+              <img
+                onClick={() => {
+                  setCurrentDeck(findOutDeck);
+                  if (numberOfCardsToPlay > findOutDeck.length)
+                    setNumberOfCardsToPlay(findOutDeck.length);
+                }}
+                src={findOutDeck[0]}
+                className={`item ${currentDeck === findOutDeck ? "current-item" : ""}`}
+              />
+            </div>
+          </div>
         </div>
         <p className="mt-1 mb-4">Escolha o numero de cartas</p>
         <div className="flex flex-row mb-3">
@@ -458,9 +507,6 @@ function App() {
     );
   };
 
-  useEffect(() => {
-    console.log(players);
-  }, [players]);
   return (
     <div className="overflow-hidden h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center">
       {step === steps.CONFIG && deckConfigComponent()}
