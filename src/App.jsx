@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { coupleDeck } from "./utils/importCoupleDeck";
 import { iveNeverDeck } from "./utils/importIveNeverDeck.js";
+import { truthOrChallengeDeck } from "./utils/importTruthOrChallenge.js";
+import { findOutDeck } from "./utils/importFindOut.js";
 import { WatchWholeDeck } from "./components/WatchWholeDeck";
 import { useEffect } from "react";
 import { SweetAlert } from "./components/SweetAlert.jsx";
@@ -120,7 +122,7 @@ function App() {
     return (
       <div className="flex flex-col align-middle items-center">
         <span className="font-bold my-2">Selecione um baralho!</span>
-        <div className="flex flex-row place-items-center place-content-center">
+        <div className="flex flex-row w-screen overflow-x-auto place-items-center place-content-center">
           <img
             onClick={() => {
               setCurrentDeck(coupleDeck);
@@ -128,9 +130,8 @@ function App() {
                 setNumberOfCardsToPlay(coupleDeck.length);
             }}
             src={coupleDeck[0]}
-            className={`${
-              currentDeck === coupleDeck ? "w-1/3" : "w-1/4 opacity-65"
-            } cursor-pointer mx-2 md:w-1/5 my-4`}
+            className={`${currentDeck === coupleDeck ? "w-1/3" : "w-1/4 opacity-65"
+              } cursor-pointer mx-2 md:w-1/5 my-4`}
           />
           <img
             onClick={() => {
@@ -139,9 +140,28 @@ function App() {
                 setNumberOfCardsToPlay(iveNeverDeck.length);
             }}
             src={iveNeverDeck[0]}
-            className={`${
-              currentDeck === iveNeverDeck ? "w-1/3" : "w-1/4 opacity-65"
-            } cursor-pointer mx-2 md:w-1/5 my-4`}
+            className={`${currentDeck === iveNeverDeck ? "w-1/3" : "w-1/4 opacity-65"
+              } cursor-pointer mx-2 md:w-1/5 my-4`}
+          />
+          <img
+            onClick={() => {
+              setCurrentDeck(truthOrChallengeDeck);
+              if (numberOfCardsToPlay > truthOrChallengeDeck.length)
+                setNumberOfCardsToPlay(truthOrChallengeDeck.length);
+            }}
+            src={truthOrChallengeDeck[0]}
+            className={`${currentDeck === truthOrChallengeDeck ? "w-1/3" : "w-1/4 opacity-65"
+              } cursor-pointer mx-2 md:w-1/5 my-4`}
+          />
+          <img
+            onClick={() => {
+              setCurrentDeck(findOutDeck);
+              if (numberOfCardsToPlay > findOutDeck.length)
+                setNumberOfCardsToPlay(findOutDeck.length);
+            }}
+            src={findOutDeck[0]}
+            className={`${currentDeck === findOutDeck ? "w-1/3" : "w-1/4 opacity-65"
+              } cursor-pointer mx-2 md:w-1/5 my-4`}
           />
         </div>
         <p className="mt-1 mb-4">Escolha o numero de cartas</p>
@@ -227,11 +247,10 @@ function App() {
           <div className="flex flex-row place-content-center place-items-center">
             Cartas restantes: {playingDeck.length - cardIndex - 1}
             <div
-              className={`p-1 m-1 border-4 rounded-3xl font-bold ${
-                cardIndex % 2 === 0
-                  ? "border-primary bg-primary"
-                  : "bg-warning border-warning text-black"
-              }`}
+              className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0
+                ? "border-primary bg-primary"
+                : "bg-warning border-warning text-black"
+                }`}
             >
               <p>Jogador {playersArrayOrder[cardIndex]}</p>
             </div>
