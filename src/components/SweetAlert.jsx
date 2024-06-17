@@ -12,8 +12,8 @@ export function SweetAlert({
                 <p className="py-4">{text}</p>
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn mx-2">Close</button>
-                        <button onClick={() => { confirmFunction() }} className='btn mx-2 btn-success'>Sure</button>
+                        <button className="btn btn-success mx-2">Continuar</button>
+                        <button onClick={() => { confirmFunction() }} className='btn mx-2 btn-warning'>Sair</button>
                     </form>
                 </div>
             </div>

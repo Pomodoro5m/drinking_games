@@ -289,3 +289,19 @@ https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
 .purple {
   background: purple;
 }
+
+.slide{
+    left: -100px;
+    -webkit-animation: slide 0.5s forwards;
+    -webkit-animation-delay: 0s;
+    animation: slide 1s forwards;
+    animation-delay: 0s;
+}
+
+@-webkit-keyframes slide {
+  100% { left: 0; }
+}
+
+@keyframes slide {
+  100% { left: 0; }
+}

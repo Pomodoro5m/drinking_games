@@ -6,7 +6,7 @@ import { findOutDeck } from "./utils/importFindOut.js";
 import { WatchWholeDeck } from "./components/WatchWholeDeck";
 import { useEffect } from "react";
 import { SweetAlert } from "./components/SweetAlert.jsx";
-import { Cog8ToothIcon } from "@heroicons/react/24/solid";
+import { Cog8ToothIcon, ArrowRightCircleIcon, ArrowLeftCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import CharSelect from "./components/CharSelect";
 
 const steps = {
@@ -292,24 +292,23 @@ function App() {
             Timer⏳
           </a>
         </div>
-        <div className="flex flex-col items-center content-start h-full self-start">
-          <div className="flex flex-row place-content-center place-items-center">
-            Cartas restantes: {playingDeck.length - cardIndex - 1}
-            <div
-              className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0
-                ? "border-primary bg-primary"
-                : "bg-warning border-warning text-black"
-                }`}
-            >
-              <p>Jogador {playersArrayOrder[cardIndex]}</p>
-            </div>
-            <Cog8ToothIcon
-              className="h-6"
-              onClick={() => setCharSelect(true)}
-            />
+        <div className="flex flex-row place-content-center place-items-center">
+          Cartas restantes: {playingDeck.length - cardIndex - 1}
+          <div
+            className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0
+              ? "border-primary bg-primary"
+              : "bg-warning border-warning text-black"
+              }`}
+          >
+            <p>Jogador {playersArrayOrder[cardIndex]}</p>
           </div>
-
-          <div className="w-10/12 h-auto flex place-items-center place-content-center">
+          <Cog8ToothIcon
+            className="h-6"
+            onClick={() => setCharSelect(true)}
+          />
+        </div>
+        <div className="flex flex-col items-center h-full self-start pb-16 justify-center">
+          <div className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
             {flip ? (
               <img
                 onClick={() => {
@@ -323,33 +322,37 @@ function App() {
                 onClick={() => {
                   setFlip(true);
                 }}
-                className="cursor-pointer md:h-96 h-10/12"
+                className="cursor-pointer md:h-96 h-10/12 slide"
                 src={currentDeck[0]}
               />
             )}
           </div>
         </div>
-        <div className="btm-nav">
+        <div className="btm-nav bg-transparent">
           <button
             onClick={() => goPreviousCard()}
-            className="bg-warning text-black text-2xl font-bold"
+            className="bg-transparent text-black "
           >
-            {"<"}
-            <span className="btm-nav-label text-lg font-bold">Anterior</span>
+            <ArrowLeftCircleIcon fill="#ca8a04" className="h-10" />
           </button>
           <button
             onClick={() => setFlip(!flip)}
-            className="bg-gray-600 text-black text-2xl font-bold"
+            className="bg-gray-600 text-black text-2xl font-bold rounded-t-2xl"
           >
-            🔃
-            <span className="btm-nav-label text-lg">Virar Carta</span>
+            <div className="rounded-full bg-white">
+              {
+                flip ?
+                  <EyeSlashIcon fill="black" className="h-8 p-1" /> :
+                  <EyeIcon fill="black" className="h-8 p-1" />
+              }
+            </div>
+            <span className="btm-nav-label text-white text-sm">Virar Carta</span>
           </button>
           <button
             onClick={() => goNextCard()}
-            className="bg-green-500 text-black text-2xl font-bold"
+            className="bg-transparent text-black"
           >
-            {">"}
-            <span className="btm-nav-label text-lg font-bold">Próxima</span>
+            <ArrowRightCircleIcon fill="#84cc16" className="h-10" />
           </button>
         </div>
       </div>
