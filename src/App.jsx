@@ -181,7 +181,7 @@ function App() {
                     setNumberOfCardsToPlay(coupleDeck.length);
                 }}
                 src={coupleDeck[0]}
-                className={`item ${currentDeck === coupleDeck ? "current-item" : ""}`}
+                className={`item ${currentDeck === coupleDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
               />
               <img
                 onClick={() => {
@@ -190,7 +190,7 @@ function App() {
                     setNumberOfCardsToPlay(iveNeverDeck.length);
                 }}
                 src={iveNeverDeck[0]}
-                className={`item ${currentDeck === iveNeverDeck ? "current-item" : ""}`}
+                className={`item ${currentDeck === iveNeverDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
               />
               <img
                 onClick={() => {
@@ -199,7 +199,7 @@ function App() {
                     setNumberOfCardsToPlay(truthOrChallengeDeck.length);
                 }}
                 src={truthOrChallengeDeck[0]}
-                className={`item ${currentDeck === truthOrChallengeDeck ? "current-item" : ""}`}
+                className={`item ${currentDeck === truthOrChallengeDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
               />
               <img
                 onClick={() => {
@@ -208,7 +208,7 @@ function App() {
                     setNumberOfCardsToPlay(findOutDeck.length);
                 }}
                 src={findOutDeck[0]}
-                className={`item ${currentDeck === findOutDeck ? "current-item" : ""}`}
+                className={`item ${currentDeck === findOutDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
               />
             </div>
           </div>
@@ -265,7 +265,7 @@ function App() {
 
   const playingComponent = () => {
     return (
-      <div className="flex w-full h-screen justify-start self-start items-center flex-col">
+      <div className="flex w-full h-screen justify-start self-start items-center flex-col overflow-hidden">
         <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100">
           <a
             onClick={() => {
@@ -307,7 +307,7 @@ function App() {
             onClick={() => setCharSelect(true)}
           />
         </div>
-        <div className="flex flex-col items-center h-full self-start pb-16 justify-center">
+        <div className="flex flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
           <div className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
             {flip ? (
               <img
@@ -332,6 +332,7 @@ function App() {
           <button
             onClick={() => goPreviousCard()}
             className="bg-transparent text-black "
+            disabled={cardIndex === 0}
           >
             <ArrowLeftCircleIcon fill="#ca8a04" className="h-10" />
           </button>
@@ -351,6 +352,7 @@ function App() {
           <button
             onClick={() => goNextCard()}
             className="bg-transparent text-black"
+            disabled={cardIndex === playingDeck.length - 1}
           >
             <ArrowRightCircleIcon fill="#84cc16" className="h-10" />
           </button>
