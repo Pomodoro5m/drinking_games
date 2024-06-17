@@ -6,7 +6,13 @@ import { findOutDeck } from "./utils/importFindOut.js";
 import { WatchWholeDeck } from "./components/WatchWholeDeck";
 import { useEffect } from "react";
 import { SweetAlert } from "./components/SweetAlert.jsx";
-import { Cog8ToothIcon, ArrowRightCircleIcon, ArrowLeftCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import {
+  Cog8ToothIcon,
+  ArrowRightCircleIcon,
+  ArrowLeftCircleIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/solid";
 import CharSelect from "./components/CharSelect";
 
 const steps = {
@@ -16,6 +22,7 @@ const steps = {
 };
 
 const MAXIMUM_PLAYER_AMOUNT = 6;
+const MINIMUM_PLAYERS_AMOUNT = 2;
 
 function App() {
   const [numberOfCardsToPlay, setNumberOfCardsToPlay] = useState(10);
@@ -143,11 +150,16 @@ function App() {
 
               items[currentItem].scrollIntoView({
                 behavior: "smooth",
-                inline: "center"
+                inline: "center",
               });
 
               items[currentItem].classList.add("current-item");
-            }} className="arrow-left control" aria-label="Previous image">◀</button>
+            }}
+            className="arrow-left control"
+            aria-label="Previous image"
+          >
+            ◀
+          </button>
           <button
             onClick={(e) => {
               const items = document.querySelectorAll(".item");
@@ -167,11 +179,16 @@ function App() {
 
               items[currentItem].scrollIntoView({
                 behavior: "smooth",
-                inline: "center"
+                inline: "center",
               });
 
               items[currentItem].classList.add("current-item");
-            }} className="arrow-right control" aria-label="Next Image">▶</button>
+            }}
+            className="arrow-right control"
+            aria-label="Next Image"
+          >
+            ▶
+          </button>
           <div className="gallery-wrapper">
             <div className="gallery">
               <img
@@ -181,7 +198,11 @@ function App() {
                     setNumberOfCardsToPlay(coupleDeck.length);
                 }}
                 src={coupleDeck[0]}
-                className={`item ${currentDeck === coupleDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
+                className={`item ${
+                  currentDeck === coupleDeck
+                    ? "current-item h-[35vh] py-0"
+                    : "py-3"
+                }`}
               />
               <img
                 onClick={() => {
@@ -190,7 +211,11 @@ function App() {
                     setNumberOfCardsToPlay(iveNeverDeck.length);
                 }}
                 src={iveNeverDeck[0]}
-                className={`item ${currentDeck === iveNeverDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
+                className={`item ${
+                  currentDeck === iveNeverDeck
+                    ? "current-item h-[35vh] py-0"
+                    : "py-3"
+                }`}
               />
               <img
                 onClick={() => {
@@ -199,7 +224,11 @@ function App() {
                     setNumberOfCardsToPlay(truthOrChallengeDeck.length);
                 }}
                 src={truthOrChallengeDeck[0]}
-                className={`item ${currentDeck === truthOrChallengeDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
+                className={`item ${
+                  currentDeck === truthOrChallengeDeck
+                    ? "current-item h-[35vh] py-0"
+                    : "py-3"
+                }`}
               />
               <img
                 onClick={() => {
@@ -208,7 +237,11 @@ function App() {
                     setNumberOfCardsToPlay(findOutDeck.length);
                 }}
                 src={findOutDeck[0]}
-                className={`item ${currentDeck === findOutDeck ? "current-item h-[35vh] py-0" : "py-3"}`}
+                className={`item ${
+                  currentDeck === findOutDeck
+                    ? "current-item h-[35vh] py-0"
+                    : "py-3"
+                }`}
               />
             </div>
           </div>
@@ -295,16 +328,17 @@ function App() {
         <div className="flex flex-row place-content-center place-items-center">
           Cartas restantes: {playingDeck.length - cardIndex - 1}
           <div
-            className={`p-1 m-1 border-4 rounded-3xl font-bold ${cardIndex % 2 === 0
-              ? "border-primary bg-primary"
-              : "bg-warning border-warning text-black"
-              }`}
+            className={`p-1 m-1 border-4 rounded-3xl font-bold ${
+              cardIndex % 2 === 0
+                ? "border-primary bg-primary"
+                : "bg-warning border-warning text-black"
+            }`}
           >
             <p>Jogador {playersArrayOrder[cardIndex]}</p>
           </div>
           <Cog8ToothIcon
             className="h-6"
-            onClick={() => setCharSelect(true)}
+            onClick={() => document.getElementById("player_modal").showModal()}
           />
         </div>
         <div className="flex flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
@@ -341,13 +375,15 @@ function App() {
             className="bg-gray-600 text-black text-2xl font-bold rounded-t-2xl"
           >
             <div className="rounded-full bg-white">
-              {
-                flip ?
-                  <EyeSlashIcon fill="black" className="h-8 p-1" /> :
-                  <EyeIcon fill="black" className="h-8 p-1" />
-              }
+              {flip ? (
+                <EyeSlashIcon fill="black" className="h-8 p-1" />
+              ) : (
+                <EyeIcon fill="black" className="h-8 p-1" />
+              )}
             </div>
-            <span className="btm-nav-label text-white text-sm">Virar Carta</span>
+            <span className="btm-nav-label text-white text-sm">
+              Virar Carta
+            </span>
           </button>
           <button
             onClick={() => goNextCard()}
@@ -528,11 +564,11 @@ function App() {
       {FAQModal()}
       {DiceModal()}
       {TimerModal()}
+
       <CharSelect
-        isVisible={showCharSelect}
-        onClose={() => setCharSelect(false)}
         players={players}
         MAXIMUM_PLAYER_AMOUNT={MAXIMUM_PLAYER_AMOUNT}
+        MINIMUM_PLAYERS_AMOUNT={MINIMUM_PLAYERS_AMOUNT}
         setPlayers={setPlayers}
       />
       <SweetAlert
