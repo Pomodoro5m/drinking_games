@@ -265,7 +265,7 @@ function App() {
 
   const playingComponent = () => {
     return (
-      <div className="flex w-full h-full justify-start self-start items-center flex-col">
+      <div className="flex w-full h-screen justify-start self-start items-center flex-col">
         <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100">
           <a
             onClick={() => {
