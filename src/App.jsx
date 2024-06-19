@@ -37,6 +37,14 @@ function App() {
   const [players, setPlayers] = useState(["Roxo", "Amarelo"]);
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
   const [currentItem, setCurrentItem] = useState(0);
+  const playerColor = [
+    "#8f34eb",
+    "#fad607",
+    "#42eff5",
+    "#f01f31",
+    "#d948ca",
+    "#1ac20e",
+  ];
 
   useEffect(() => {
     let playersArray = new Array(currentDeck.length).fill("");
@@ -328,11 +336,12 @@ function App() {
         <div className="flex flex-row place-content-center place-items-center">
           Cartas restantes: {playingDeck.length - cardIndex - 1}
           <div
-            className={`p-1 m-1 border-4 rounded-3xl font-bold ${
-              cardIndex % 2 === 0
-                ? "border-primary bg-primary"
-                : "bg-warning border-warning text-black"
-            }`}
+            style={{
+              backgroundColor: `${
+                playerColor[players.indexOf(playersArrayOrder[cardIndex])]
+              }`,
+            }}
+            className={`p-1 m-1 border-4 rounded-3xl font-bold`}
           >
             <p>Jogador {playersArrayOrder[cardIndex]}</p>
           </div>
