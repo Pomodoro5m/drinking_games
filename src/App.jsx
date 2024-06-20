@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { coupleDeck } from "./utils/importCoupleDeck";
 import { iveNeverDeck } from "./utils/importIveNeverDeck.js";
 import { truthOrChallengeDeck } from "./utils/importTruthOrChallenge.js";
 import { findOutDeck } from "./utils/importFindOut.js";
 import { WatchWholeDeck } from "./components/WatchWholeDeck";
-import { useEffect } from "react";
 import { SweetAlert } from "./components/SweetAlert.jsx";
 import { Cog8ToothIcon, ArrowRightCircleIcon, ArrowLeftCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import CharSelect from "./components/CharSelect";
@@ -30,6 +29,12 @@ function App() {
   const [players, setPlayers] = useState(["Roxo", "Amarelo"]);
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
   const [currentItem, setCurrentItem] = useState(0);
+  const cardBack = useRef(null);
+  const fullCardRef = useRef(null);
+  let touchstartX = 0;
+  let touchstartY = 0;
+  let touchendX = 0;
+  let touchendY = 0;
 
   useEffect(() => {
     let playersArray = new Array(currentDeck.length).fill("");
@@ -54,12 +59,40 @@ function App() {
         return goPreviousCard();
       }
     };
+
+    const touchStartHandler = (event) => {
+      touchstartX = event.changedTouches[0].screenX;
+      touchstartY = event.changedTouches[0].screenY;
+    }
+
+    const touchEndHandler = (event) => {
+      touchendX = event.changedTouches[0].screenX;
+      touchendY = event.changedTouches[0].screenY;
+      if (Math.abs(touchendX - touchstartX) > 50)
+        handleGesture();
+    }
+
+    fullCardRef.current?.addEventListener('touchstart', touchStartHandler, false);
+
+    fullCardRef.current?.addEventListener('touchend', touchEndHandler, false);
     window.addEventListener("keydown", keyDownHandler);
 
     return () => {
       window.removeEventListener("keydown", keyDownHandler);
+      window.removeEventListener("touchend", touchEndHandler);
+      window.removeEventListener("touchstart", touchStartHandler);
     };
   });
+
+  const handleGesture = () => {
+    if (touchendX < touchstartX) {
+      goNextCard(); return;
+    }
+
+    if (touchendX > touchstartX) {
+      goPreviousCard(); return;
+    }
+  }
 
   const resetAndGoHome = (resetDeck = false) => {
     resetDeck && setCurrentDeck([]);
@@ -308,7 +341,7 @@ function App() {
           />
         </div>
         <div className="flex flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
-          <div className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
+          <div ref={fullCardRef} className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
             {flip ? (
               <img
                 onClick={() => {
@@ -322,7 +355,8 @@ function App() {
                 onClick={() => {
                   setFlip(true);
                 }}
-                className="cursor-pointer md:h-96 h-10/12 slide"
+                ref={cardBack}
+                className={`flip-animation cursor-pointer md:h-96 h-10/12 slide`}
                 src={currentDeck[0]}
               />
             )}

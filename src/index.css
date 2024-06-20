@@ -305,3 +305,12 @@ https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
 @keyframes slide {
   100% { left: 0; }
 }
+
+.flip-animation {
+  transition: all 0.75s 0.25s;
+  transform: rotate(0);
+}
+
+.flip {
+  transform: rotateY(180deg);
+}
