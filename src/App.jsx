@@ -36,14 +36,16 @@ function App() {
   const [players, setPlayers] = useState(["Roxo", "Amarelo"]);
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
   const [currentItem, setCurrentItem] = useState(0);
+
   const playerColor = [
-    "#8f34eb",
-    "#fad607",
-    "#42eff5",
-    "#f01f31",
-    "#d948ca",
-    "#1ac20e",
+    { background: "#8f34eb", textColor: null },
+    { background: "#fad607", textColor: "text-black" },
+    { background: "#42eff5", textColor: null },
+    { background: "#f01f31", textColor: null },
+    { background: "#d948ca", textColor: null },
+    { background: "#1ac20e", textColor: null },
   ];
+
   const cardBack = useRef(null);
   const fullCardRef = useRef(null);
   let touchstartX = 0;
@@ -240,8 +242,8 @@ function App() {
                 }}
                 src={coupleDeck[0]}
                 className={`item ${currentDeck === coupleDeck
-                    ? "current-item h-[35vh] py-0"
-                    : "py-3"
+                  ? "current-item h-[35vh] py-0"
+                  : "py-3"
                   }`}
               />
               <img
@@ -252,8 +254,8 @@ function App() {
                 }}
                 src={iveNeverDeck[0]}
                 className={`item ${currentDeck === iveNeverDeck
-                    ? "current-item h-[35vh] py-0"
-                    : "py-3"
+                  ? "current-item h-[35vh] py-0"
+                  : "py-3"
                   }`}
               />
               <img
@@ -264,8 +266,8 @@ function App() {
                 }}
                 src={truthOrChallengeDeck[0]}
                 className={`item ${currentDeck === truthOrChallengeDeck
-                    ? "current-item h-[35vh] py-0"
-                    : "py-3"
+                  ? "current-item h-[35vh] py-0"
+                  : "py-3"
                   }`}
               />
               <img
@@ -276,8 +278,8 @@ function App() {
                 }}
                 src={findOutDeck[0]}
                 className={`item ${currentDeck === findOutDeck
-                    ? "current-item h-[35vh] py-0"
-                    : "py-3"
+                  ? "current-item h-[35vh] py-0"
+                  : "py-3"
                   }`}
               />
             </div>
@@ -366,12 +368,11 @@ function App() {
           Cartas restantes: {playingDeck.length - cardIndex - 1}
           <div
             style={{
-              backgroundColor: `${playerColor[players.indexOf(playersArrayOrder[cardIndex])]
-                }`,
+              backgroundColor: `${playerColor[players.indexOf(playersArrayOrder[cardIndex])]?.background}`,
             }}
             className={`p-1 m-1 border-4 rounded-3xl font-bold`}
           >
-            <p>Jogador {playersArrayOrder[cardIndex]}</p>
+            <p className={`${playerColor[players.indexOf(playersArrayOrder[cardIndex])]?.textColor ?? ''}`}>Jogador {playersArrayOrder[cardIndex]}</p>
           </div>
           <Cog8ToothIcon
             className="h-6"
@@ -403,7 +404,7 @@ function App() {
         <div className="btm-nav bg-transparent">
           <button
             onClick={() => goPreviousCard()}
-            className="bg-transparent text-black "
+            className={`bg-transparent ${cardIndex === 0 ? "opacity-65 cursor-not-allowed" : "cursor-pointer"}`}
             disabled={cardIndex === 0}
           >
             <ArrowLeftCircleIcon fill="#ca8a04" className="h-10" />
@@ -425,7 +426,7 @@ function App() {
           </button>
           <button
             onClick={() => goNextCard()}
-            className="bg-transparent text-black"
+            className={`bg-transparent ${cardIndex === playingDeck.length - 1 ? "opacity-65 cursor-not-allowed" : "cursor-pointer"}`}
             disabled={cardIndex === playingDeck.length - 1}
           >
             <ArrowRightCircleIcon fill="#84cc16" className="h-10" />
@@ -587,7 +588,7 @@ function App() {
   };
 
   return (
-    <div className="overflow-hidden h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center">
+    <div className="h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center">
       {step === steps.CONFIG && deckConfigComponent()}
       {step === steps.PLAYING && playingComponent()}
       {step === steps.WATCH && (
