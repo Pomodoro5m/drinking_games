@@ -37,6 +37,54 @@ function App() {
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
   const [currentItem, setCurrentItem] = useState(0);
 
+  const [index, setIndex] = useState(0);
+  const [touchPosition, setTouchPosition] = useState(null)
+  const timeoutRef = useRef(null);
+  const cardBack = useRef(null);
+  const delay = 15000;
+
+  const handleTouchStart = (e) => {
+    const touchDown = e.touches[0].clientX
+    setTouchPosition(touchDown)
+  }
+
+  const handleTouchMove = (e) => {
+    const touchDown = touchPosition
+
+    if (touchDown === null) {
+      return
+    }
+
+    const currentTouch = e.touches[0].clientX
+    const diff = touchDown - currentTouch
+
+    if (diff > 5) {
+      goNextCard();
+    }
+
+    if (diff < -5) {
+      goPreviousCard();
+    }
+
+    setTouchPosition(null)
+  }
+
+  function resetTimeout() {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }
+  useEffect(() => {
+    resetTimeout();
+    timeoutRef.current = setTimeout(
+      () =>
+        goNextCard(),
+      delay
+    );
+
+    return () => { resetTimeout(); };
+  }, [index]);
+
   const playerColor = [
     { background: "#8f34eb", textColor: null },
     { background: "#fad607", textColor: "text-black" },
@@ -45,13 +93,6 @@ function App() {
     { background: "#d948ca", textColor: null },
     { background: "#1ac20e", textColor: null },
   ];
-
-  const cardBack = useRef(null);
-  const fullCardRef = useRef(null);
-  let touchstartX = 0;
-  let touchstartY = 0;
-  let touchendX = 0;
-  let touchendY = 0;
 
   useEffect(() => {
     let playersArray = new Array(currentDeck.length).fill("");
@@ -77,39 +118,13 @@ function App() {
       }
     };
 
-    const touchStartHandler = (event) => {
-      touchstartX = event.changedTouches[0].screenX;
-      touchstartY = event.changedTouches[0].screenY;
-    }
 
-    const touchEndHandler = (event) => {
-      touchendX = event.changedTouches[0].screenX;
-      touchendY = event.changedTouches[0].screenY;
-      if (Math.abs(touchendX - touchstartX) > 50)
-        handleGesture();
-    }
-
-    fullCardRef.current?.addEventListener('touchstart', touchStartHandler, false);
-
-    fullCardRef.current?.addEventListener('touchend', touchEndHandler, false);
     window.addEventListener("keydown", keyDownHandler);
 
     return () => {
       window.removeEventListener("keydown", keyDownHandler);
-      window.removeEventListener("touchend", touchEndHandler);
-      window.removeEventListener("touchstart", touchStartHandler);
     };
   });
-
-  const handleGesture = () => {
-    if (touchendX < touchstartX) {
-      goNextCard(); return;
-    }
-
-    if (touchendX > touchstartX) {
-      goPreviousCard(); return;
-    }
-  }
 
   const resetAndGoHome = (resetDeck = false) => {
     resetDeck && setCurrentDeck([]);
@@ -122,6 +137,10 @@ function App() {
   };
 
   const goNextCard = () => {
+    if (!flip) {
+      setFlip(true);
+      return;
+    }
     setFlip(false);
     if (cardIndex < playingDeck.length - 1) {
       setCardIndex(cardIndex + 1);
@@ -380,7 +399,7 @@ function App() {
           />
         </div>
         <div className="flex flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
-          <div ref={fullCardRef} className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
+          <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
             {flip ? (
               <img
                 onClick={() => {
