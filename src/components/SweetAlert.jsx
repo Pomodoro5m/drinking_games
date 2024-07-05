@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 export function SweetAlert({
     text,
     confirmFunction,
-    modalIdentifier = 'sweet-alert',
+    reference = null,
 }) {
     return (
-        <dialog id={modalIdentifier} className="modal">
+        <dialog ref={reference} className="modal">
             <div className="modal-box">
                 <h3 className="font-bold text-lg">Atenção!</h3>
                 <p className="py-4">{text}</p>

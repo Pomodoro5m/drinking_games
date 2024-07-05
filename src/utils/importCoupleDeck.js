@@ -1,4 +1,4 @@
-import card1 from '../assets/decks/couple/1.png';
+import card1 from '../assets/decks/couple/1.svg';
 import card2 from '../assets/decks/couple/2.png';
 import card3 from '../assets/decks/couple/3.png';
 import card4 from '../assets/decks/couple/4.png';

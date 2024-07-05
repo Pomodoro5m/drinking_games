@@ -314,3 +314,32 @@ https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
 .flip {
   transform: rotateY(180deg);
 }
+
+.firework {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  animation: explode 2s ease-in-out infinite;
+}
+
+.firework:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.firework:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(100vw * (var(--tx))), calc(100vh * (var(--ty))));
+    opacity: 0;
+  }
+}

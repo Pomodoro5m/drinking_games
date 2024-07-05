@@ -12,6 +12,8 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/solid";
+import fireCover from "./assets/cardCovers/fire-cover.svg";
+import loversCover from "./assets/cardCovers/lovers-cover.svg";
 import CharSelect from "./components/CharSelect";
 
 const steps = {
@@ -41,6 +43,11 @@ function App() {
   const [touchPosition, setTouchPosition] = useState(null)
   const timeoutRef = useRef(null);
   const cardBack = useRef(null);
+  const endGameModalRef = useRef(null);
+  const timerModelRef = useRef(null);
+  const faqModelRef = useRef(null);
+  const diceModalRef = useRef(null);
+  const confirmModalRef = useRef(null);
   const delay = 15000;
 
   const handleTouchStart = (e) => {
@@ -93,6 +100,11 @@ function App() {
     { background: "#d948ca", textColor: null },
     { background: "#1ac20e", textColor: null },
   ];
+
+  useEffect(() => {
+    if (cardIndex === playingDeck.length - 1)
+      endGameModalRef?.current?.showModal();
+  }, [cardIndex])
 
   useEffect(() => {
     let playersArray = new Array(currentDeck.length).fill("");
@@ -265,6 +277,32 @@ function App() {
                   : "py-3"
                   }`}
               />
+              {/* <img
+                onClick={() => {
+                  setCurrentDeck(coupleDeck);
+                  if (numberOfCardsToPlay > coupleDeck.length)
+                    setNumberOfCardsToPlay(coupleDeck.length);
+                }}
+                src={fireCover}
+                className={`item ${currentDeck === coupleDeck
+                  ? "current-item h-[35vh] py-0"
+                  : "py-3"
+                  }`}
+              />
+              <img
+                onClick={() => {
+                  setCurrentDeck(coupleDeck);
+                  if (numberOfCardsToPlay > coupleDeck.length)
+                    setNumberOfCardsToPlay(coupleDeck.length);
+                }}
+                style={{ fill: '#00a96e', stroke: '#00a96e' }}
+                stroke="white"
+                src={loversCover}
+                className={`item ${currentDeck === coupleDeck
+                  ? "current-item h-[35vh] py-0"
+                  : "py-3"
+                  }`}
+              /> */}
               <img
                 onClick={() => {
                   setCurrentDeck(iveNeverDeck);
@@ -336,7 +374,7 @@ function App() {
           </button>
           <div className="m-2 flex flex-row place-content-center place-items-center w-full">
             <button
-              onClick={() => document.getElementById("faq_modal")?.showModal()}
+              onClick={() => { faqModelRef?.current?.showModal() }}
               className="btn-md mx-2 btn btn-info"
             >
               Dúvidas 🗯️
@@ -360,7 +398,7 @@ function App() {
         <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100">
           <a
             onClick={() => {
-              document.getElementById("leave_home_modal").showModal();
+              confirmModalRef?.current?.showModal();
             }}
             className="btn btn-ghost text-sm"
           >
@@ -368,7 +406,7 @@ function App() {
           </a>
           <a
             onClick={() => {
-              document.getElementById("dice_modal")?.showModal();
+              diceModalRef?.current?.showModal();
             }}
             className="btn btn-ghost text-sm"
           >
@@ -376,7 +414,7 @@ function App() {
           </a>
           <a
             onClick={() => {
-              document.getElementById("timer_modal")?.showModal();
+              timerModelRef?.current?.showModal();
             }}
             className="btn btn-ghost text-sm"
           >
@@ -398,7 +436,7 @@ function App() {
             onClick={() => document.getElementById("player_modal").showModal()}
           />
         </div>
-        <div className="flex flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
+        <div className="flex w-full flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
           <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
             {flip ? (
               <img
@@ -457,7 +495,7 @@ function App() {
 
   const FAQModal = () => {
     return (
-      <dialog id="faq_modal" className="modal">
+      <dialog ref={faqModelRef} className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -525,7 +563,7 @@ function App() {
 
   const DiceModal = () => {
     return (
-      <dialog id="dice_modal" className="modal">
+      <dialog ref={diceModalRef} className="modal">
         <div className="modal-box">
           <div
             onClick={() => {
@@ -581,7 +619,7 @@ function App() {
 
   const TimerModal = () => {
     return (
-      <dialog id="timer_modal" className="modal">
+      <dialog ref={timerModelRef} id="timer_modal" className="modal">
         <div className="modal-box">
           <label className="input input-bordered flex items-center gap-2">
             Tempo
@@ -606,6 +644,29 @@ function App() {
     );
   };
 
+  const EndGameModal = () => {
+    return (
+      <dialog ref={endGameModalRef} className="modal">
+        <div className="firework"></div>
+        <div className="firework"></div>
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Fim de jogo!</h3>
+          <p className="py-4">O baralho acabou!</p>
+          <div className="modal-action">
+            <form method="dialog flex flex-row w-100 jjustify-around">
+              <button onClick={() => { confirmFunction() }} className='btn btn-sm w-100 mx-2 btn-warning'>Sair</button>
+              <button onClick={() => { setCardIndex(0) }} className="btn btn-sm w-100 btn-primary mx-2">Reiniciar</button>
+              <button className="btn btn-sm w-100 btn-success mx-2">Continuar</button>
+            </form>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+    );
+  };
+
   return (
     <div className="h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center">
       {step === steps.CONFIG && deckConfigComponent()}
@@ -622,6 +683,7 @@ function App() {
       {FAQModal()}
       {DiceModal()}
       {TimerModal()}
+      {EndGameModal()}
 
       <CharSelect
         players={players}
@@ -632,7 +694,7 @@ function App() {
       <SweetAlert
         text="Deseja realmente sair do jogo?"
         confirmFunction={() => handleHomeClick()}
-        modalIdentifier="leave_home_modal"
+        reference={confirmModalRef}
       />
     </div>
   );
