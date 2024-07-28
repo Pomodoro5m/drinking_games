@@ -12,8 +12,6 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/solid";
-import fireCover from "./assets/cardCovers/fire-cover.svg";
-import loversCover from "./assets/cardCovers/lovers-cover.svg";
 import CharSelect from "./components/CharSelect";
 
 const steps = {
@@ -30,10 +28,8 @@ function App() {
   const [playingDeck, setPlayingDeck] = useState([]);
   const [currentDeck, setCurrentDeck] = useState(coupleDeck);
   const [cardIndex, setCardIndex] = useState(0);
-  const [flip, setFlip] = useState(false);
   const [customSelectedCards, setCustomSelectedCards] = useState([]);
   const [timer, setTimer] = useState(0);
-  const [showCharSelect, setCharSelect] = useState(false);
   const [step, setStep] = useState("config");
   const [players, setPlayers] = useState(["Roxo", "Amarelo"]);
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
@@ -119,9 +115,6 @@ function App() {
 
   useEffect(() => {
     const keyDownHandler = ({ key }) => {
-      if (key === "Enter" && step === steps.PLAYING) {
-        return setFlip(!flip);
-      }
       if ((key === "ArrowRight") & (step === steps.PLAYING)) {
         return goNextCard();
       }
@@ -143,17 +136,11 @@ function App() {
     setNumberOfCardsToPlay(10);
     setPlayingDeck([]);
     setCardIndex(0);
-    setFlip(false);
     setCustomSelectedCards([]);
     // setTimer("15");
   };
 
   const goNextCard = () => {
-    if (!flip) {
-      setFlip(true);
-      return;
-    }
-    setFlip(false);
     if (cardIndex < playingDeck.length - 1) {
       setCardIndex(cardIndex + 1);
     }
@@ -277,32 +264,6 @@ function App() {
                   : "py-3"
                   }`}
               />
-              {/* <img
-                onClick={() => {
-                  setCurrentDeck(coupleDeck);
-                  if (numberOfCardsToPlay > coupleDeck.length)
-                    setNumberOfCardsToPlay(coupleDeck.length);
-                }}
-                src={fireCover}
-                className={`item ${currentDeck === coupleDeck
-                  ? "current-item h-[35vh] py-0"
-                  : "py-3"
-                  }`}
-              />
-              <img
-                onClick={() => {
-                  setCurrentDeck(coupleDeck);
-                  if (numberOfCardsToPlay > coupleDeck.length)
-                    setNumberOfCardsToPlay(coupleDeck.length);
-                }}
-                style={{ fill: '#00a96e', stroke: '#00a96e' }}
-                stroke="white"
-                src={loversCover}
-                className={`item ${currentDeck === coupleDeck
-                  ? "current-item h-[35vh] py-0"
-                  : "py-3"
-                  }`}
-              /> */}
               <img
                 onClick={() => {
                   setCurrentDeck(iveNeverDeck);
@@ -438,24 +399,12 @@ function App() {
         </div>
         <div className="flex w-full flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
           <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
-            {flip ? (
-              <img
-                onClick={() => {
-                  setFlip(false);
-                }}
-                className="cursor-pointer md:h-96 h-10/12"
-                src={playingDeck[cardIndex]}
-              />
-            ) : (
-              <img
-                onClick={() => {
-                  setFlip(true);
-                }}
-                ref={cardBack}
-                className={`flip-animation cursor-pointer md:h-96 h-10/12 slide`}
-                src={currentDeck[0]}
-              />
-            )}
+            <img
+              onClick={() => {
+              }}
+              className="playing_card cursor-pointer md:h-96 h-10/12"
+              src={playingDeck[cardIndex]}
+            />
           </div>
         </div>
         <div className="btm-nav bg-transparent">
@@ -467,19 +416,9 @@ function App() {
             <ArrowLeftCircleIcon fill="#ca8a04" className="h-10" />
           </button>
           <button
-            onClick={() => setFlip(!flip)}
+            onClick={() => { }}
             className="bg-gray-600 text-black text-2xl font-bold rounded-t-2xl"
           >
-            <div className="rounded-full bg-white">
-              {flip ? (
-                <EyeSlashIcon fill="black" className="h-8 p-1" />
-              ) : (
-                <EyeIcon fill="black" className="h-8 p-1" />
-              )}
-            </div>
-            <span className="btm-nav-label text-white text-sm">
-              Virar Carta
-            </span>
           </button>
           <button
             onClick={() => goNextCard()}
