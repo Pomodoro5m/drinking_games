@@ -19,7 +19,7 @@ export function WatchWholeDeck({ setStep, deck, customSelectedCards, setCustomSe
         )
     }
     return (
-        <div className="flex flex-wrap flex-row place-content-center place-items-center w-full">
+        <div className="flex flex-wrap flex-row place-content-center place-items-center w-full overflow-y-visible">
             <div className="z-10 md:flex-nowrap flex-wrap rounded-b-3xl sticky navbar top-0 p-2 justify-evenly bg-base-100">
                 <a onClick={() => { setStep('config') }} className="btn btn-ghost text-xl">Home 🏚️</a>
                 <div>

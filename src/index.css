@@ -343,3 +343,7 @@ https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
     opacity: 0;
   }
 }
+
+.playing_card{
+  transition: transform 0.5s ease-in-out;
+}

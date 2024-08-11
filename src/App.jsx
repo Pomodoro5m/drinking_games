@@ -34,11 +34,12 @@ function App() {
   const [players, setPlayers] = useState(["Roxo", "Amarelo"]);
   const [playersArrayOrder, setPlayersArrayOrder] = useState([]);
   const [currentItem, setCurrentItem] = useState(0);
+  const [cardPosition, setCardPosition] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const [index, setIndex] = useState(0);
   const [touchPosition, setTouchPosition] = useState(null)
   const timeoutRef = useRef(null);
-  const cardBack = useRef(null);
   const endGameModalRef = useRef(null);
   const timerModelRef = useRef(null);
   const faqModelRef = useRef(null);
@@ -47,30 +48,30 @@ function App() {
   const delay = 15000;
 
   const handleTouchStart = (e) => {
-    const touchDown = e.touches[0].clientX
-    setTouchPosition(touchDown)
-  }
+    setIsDragging(true);
+    setTouchPosition(e.touches[0].clientX);
+  };
 
   const handleTouchMove = (e) => {
-    const touchDown = touchPosition
+    if (!isDragging) return;
 
-    if (touchDown === null) {
-      return
-    }
+    const currentTouch = e.touches[0].clientX;
+    const diff = currentTouch - touchPosition;
+    setCardPosition(diff);
+  };
 
-    const currentTouch = e.touches[0].clientX
-    const diff = touchDown - currentTouch
+  const handleTouchEnd = () => {
+    setIsDragging(false);
 
-    if (diff > 5) {
+    if (cardPosition > 100) {
+      goPreviousCard();
+    } else if (cardPosition < -100) {
       goNextCard();
     }
 
-    if (diff < -5) {
-      goPreviousCard();
-    }
+    setCardPosition(0);
+  };
 
-    setTouchPosition(null)
-  }
 
   function resetTimeout() {
     if (timeoutRef.current) {
@@ -96,11 +97,6 @@ function App() {
     { background: "#d948ca", textColor: null },
     { background: "#1ac20e", textColor: null },
   ];
-
-  useEffect(() => {
-    if (cardIndex === playingDeck.length - 1)
-      endGameModalRef?.current?.showModal();
-  }, [cardIndex])
 
   useEffect(() => {
     let playersArray = new Array(currentDeck.length).fill("");
@@ -143,7 +139,8 @@ function App() {
   const goNextCard = () => {
     if (cardIndex < playingDeck.length - 1) {
       setCardIndex(cardIndex + 1);
-    }
+    } else
+      endGameModalRef?.current?.showModal();
   };
 
   const goPreviousCard = () => {
@@ -189,7 +186,7 @@ function App() {
 
   const deckConfigComponent = () => {
     return (
-      <div className="flex flex-col align-middle items-center">
+      <div className="flex flex-col align-middle items-center overflow-hidden">
         <span className="font-bold my-2">Selecione um baralho!</span>
         <div className="container">
           <button
@@ -209,7 +206,7 @@ function App() {
 
               items.forEach((item) => item.classList.remove("current-item"));
 
-              items[currentItem].scrollIntoView({
+              items[currentItem]?.scrollIntoView({
                 behavior: "smooth",
                 inline: "center",
               });
@@ -356,7 +353,7 @@ function App() {
   const playingComponent = () => {
     return (
       <div className="flex w-full h-screen justify-start self-start items-center flex-col overflow-hidden">
-        <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100">
+        <div className="z-10 rounded-b-3xl sticky flex-wrap md:flex-nowrap navbar top-0 justify-evenly bg-base-100 overflow-hidden">
           <a
             onClick={() => {
               confirmModalRef?.current?.showModal();
@@ -397,11 +394,20 @@ function App() {
             onClick={() => document.getElementById("player_modal").showModal()}
           />
         </div>
-        <div className="flex w-full flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
-          <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden">
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="flex w-full flex-col items-center h-full self-start pb-16 justify-center overflow-hidden">
+          <div
+            className="w-10/12 h-auto flex place-items-center place-content-center overflow-hidden absolute"
+            style={{
+              transform: `translateX(${cardPosition}px)`,
+              transition: isDragging ? 'none' : 'transform 0.3s ease-in-out'
+            }}
+          >
             <img
-              onClick={() => {
-              }}
+              onClick={() => { }}
               className="playing_card cursor-pointer md:h-96 h-10/12"
               src={playingDeck[cardIndex]}
             />
@@ -454,9 +460,13 @@ function App() {
             e no mínimo 1 carta para poder habilitar o jogo!
           </p>
           <p className="py-4">
-            Dúvidas ou sugestões, mandar no instagran{" "}
+            Dúvidas ou sugestões, mandar no instagram{" "}
             <a href="https://www.instagram.com/matheusjimenez/" target="_blank">
-              @Matheusjimenez
+              @matheusjimenez
+            </a>
+            <br />
+            <a href="https://www.instagram.com/andersonmoraees/" target="_blank">
+              @andersonmoraees
             </a>
           </p>
           <p className="py-4">
@@ -593,9 +603,9 @@ function App() {
           <p className="py-4">O baralho acabou!</p>
           <div className="modal-action">
             <form method="dialog flex flex-row w-100 jjustify-around">
-              <button onClick={() => { confirmFunction() }} className='btn btn-sm w-100 mx-2 btn-warning'>Sair</button>
-              <button onClick={() => { setCardIndex(0) }} className="btn btn-sm w-100 btn-primary mx-2">Reiniciar</button>
-              <button className="btn btn-sm w-100 btn-success mx-2">Continuar</button>
+              <button onClick={(e) => { e.preventDefault(); confirmModalRef?.current?.showModal(); endGameModalRef?.current?.close(); }} className='btn btn-sm w-100 mx-2 btn-warning'>Sair</button>
+              <button onClick={(e) => { e.preventDefault(); setCardIndex(0); endGameModalRef?.current?.close(); }} className="btn btn-sm w-100 btn-primary mx-2">Inicio</button>
+              <button onClick={(e) => { e.preventDefault(); endGameModalRef?.current?.close(); }} className="btn btn-sm w-100 btn-success mx-2">Continuar</button>
             </form>
           </div>
         </div>
@@ -607,7 +617,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center">
+    <div className={`h-screen w-full flex flex-row flex-wrap justify-center align-middle items-center ${step === steps.WATCH ? 'overflow-x-hidden' : 'overflow-hidden'}`}>
       {step === steps.CONFIG && deckConfigComponent()}
       {step === steps.PLAYING && playingComponent()}
       {step === steps.WATCH && (
